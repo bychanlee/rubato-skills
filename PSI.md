@@ -30,4 +30,17 @@ Skills are in `skills/psi-*/`. Each has a SKILL.md prompt and a self-contained P
 - Create calcs with the same parent **sequentially**, not in parallel.
 - Computer registry is global (`~/.claude/agent-memory/psi/computers.yaml`), not per-project.
 - Do not manually edit `index.md` files — use the skills.
+- **Do NOT access other project directories.** Stay within the current project.
+
+### Creating Reports
+
+- Before creating a report, check `calc_db/index.md` for existing calculations that are relevant.
+- If suitable calculations exist, reference them with `calcs:c001,c002,...` when creating the report.
+- If no suitable calculation exists, create one first with `/psi-new-calc`, then create the report referencing it.
+- Reports must always be grounded in actual calculation data with provenance links maintained.
+
+### Post-Processing
+
+- When asked to do post-processing or analysis, create a report with `/psi-new-report` linking the relevant calculations.
+- Save any scripts used for post-processing in the report directory.
 ```
