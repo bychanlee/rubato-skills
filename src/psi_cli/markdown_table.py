@@ -110,7 +110,11 @@ def read_index(path: str | Path) -> tuple[str, list[str], list[list[str]]]:
 
 
 def write_index(path: str | Path, preamble: str, headers: list[str], rows: list[list[str]]) -> None:
-    """Write preamble + table to an index file."""
+    """Write preamble + table to an index file.
+
+    Note: For atomic read-modify-write, callers should wrap both read_index
+    and write_index inside a locked_write() context manager.
+    """
     p = Path(path)
     p.parent.mkdir(parents=True, exist_ok=True)
     content = preamble + render_table(headers, rows)

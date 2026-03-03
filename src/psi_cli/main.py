@@ -16,6 +16,9 @@ def main(argv: list[str] | None = None) -> None:
     parser = argparse.ArgumentParser(prog="psi-cli", description="CLI tool for psi-agent provenance tracking")
     sub = parser.add_subparsers(dest="command")
 
+    # init
+    sub.add_parser("init", help="Initialize psi project (create calc_db/ and reports/ with index files)")
+
     # fm
     fm_parser = sub.add_parser("fm", help="Front matter operations")
     fm_sub = fm_parser.add_subparsers(dest="fm_command")
@@ -108,7 +111,10 @@ def main(argv: list[str] | None = None) -> None:
         parser.print_help()
         sys.exit(1)
 
-    if args.command == "fm":
+    if args.command == "init":
+        from psi_cli.commands.init import run_init
+        run_init(args)
+    elif args.command == "fm":
         from psi_cli.commands.fm import run_fm
         run_fm(args)
     elif args.command == "index":

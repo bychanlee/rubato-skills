@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from psi_cli.filelock import locked_write
 from psi_cli.frontmatter import read_frontmatter, write_frontmatter
 from psi_cli.main import die
 
@@ -61,56 +62,60 @@ def run_link(args) -> None:
 
 
 def _add_child(parent_id: str, child_id: str) -> None:
-    """Add child_id to parent's children list."""
+    """Add child_id to parent's children list (with file locking)."""
     parent_path = _resolve_path(parent_id)
     if not parent_path.exists():
         die(f"Parent not found: {parent_path}")
 
-    metadata, body = read_frontmatter(parent_path)
-    if _add_to_list(metadata, "children", child_id):
-        write_frontmatter(parent_path, metadata, body)
-        print(f"Added {child_id} to {parent_id}.children")
-    else:
-        print(f"{child_id} already in {parent_id}.children")
+    with locked_write(parent_path):
+        metadata, body = read_frontmatter(parent_path)
+        if _add_to_list(metadata, "children", child_id):
+            write_frontmatter(parent_path, metadata, body)
+            print(f"Added {child_id} to {parent_id}.children")
+        else:
+            print(f"{child_id} already in {parent_id}.children")
 
 
 def _remove_child(parent_id: str, child_id: str) -> None:
-    """Remove child_id from parent's children list."""
+    """Remove child_id from parent's children list (with file locking)."""
     parent_path = _resolve_path(parent_id)
     if not parent_path.exists():
         die(f"Parent not found: {parent_path}")
 
-    metadata, body = read_frontmatter(parent_path)
-    if _remove_from_list(metadata, "children", child_id):
-        write_frontmatter(parent_path, metadata, body)
-        print(f"Removed {child_id} from {parent_id}.children")
-    else:
-        print(f"{child_id} not in {parent_id}.children")
+    with locked_write(parent_path):
+        metadata, body = read_frontmatter(parent_path)
+        if _remove_from_list(metadata, "children", child_id):
+            write_frontmatter(parent_path, metadata, body)
+            print(f"Removed {child_id} from {parent_id}.children")
+        else:
+            print(f"{child_id} not in {parent_id}.children")
 
 
 def _add_report(calc_id: str, report_id: str) -> None:
-    """Add report_id to calc's reports list."""
+    """Add report_id to calc's reports list (with file locking)."""
     calc_path = _resolve_path(calc_id)
     if not calc_path.exists():
         die(f"Calc not found: {calc_path}")
 
-    metadata, body = read_frontmatter(calc_path)
-    if _add_to_list(metadata, "reports", report_id):
-        write_frontmatter(calc_path, metadata, body)
-        print(f"Added {report_id} to {calc_id}.reports")
-    else:
-        print(f"{report_id} already in {calc_id}.reports")
+    with locked_write(calc_path):
+        metadata, body = read_frontmatter(calc_path)
+        if _add_to_list(metadata, "reports", report_id):
+            write_frontmatter(calc_path, metadata, body)
+            print(f"Added {report_id} to {calc_id}.reports")
+        else:
+            print(f"{report_id} already in {calc_id}.reports")
 
 
 def _remove_report(calc_id: str, report_id: str) -> None:
-    """Remove report_id from calc's reports list."""
+    """Remove report_id from calc's reports list (with file locking)."""
     calc_path = _resolve_path(calc_id)
     if not calc_path.exists():
         die(f"Calc not found: {calc_path}")
 
-    metadata, body = read_frontmatter(calc_path)
-    if _remove_from_list(metadata, "reports", report_id):
-        write_frontmatter(calc_path, metadata, body)
-        print(f"Removed {report_id} from {calc_id}.reports")
-    else:
-        print(f"{report_id} not in {calc_id}.reports")
+    with locked_write(calc_path):
+        metadata, body = read_frontmatter(calc_path)
+        if _remove_from_list(metadata, "reports", report_id):
+            write_frontmatter(calc_path, metadata, body)
+            print(f"Removed {report_id} from {calc_id}.reports")
+        else:
+            print(f"{report_id} not in {calc_id}.reports")

@@ -4,6 +4,7 @@ __pycache__/
 dist/
 build/
 .pytest_cache/
+*.lock
 
 # Example projects: ignore generated psi output, keep only prompt.md
 examples/*/calc_db/

@@ -1,8 +1,8 @@
 ---
 name: psi
-description: "Use this agent when the user issues a command prefixed with `psi:` (e.g., `psi:init`, `psi:new-calc`, `psi:update-calc`, `psi:new-report`, `psi:update-report`, `psi:status`, `psi:graph`, `psi:rebuild-index`, `psi:add-computer`, `psi:list-computers`, `psi:remove-computer`, `psi:push-calc`, `psi:pull-calc`) to manage computational research provenance tracking. Also use this agent when the user asks about calculation status, provenance graphs, or managing their computational research workflow tracked through the psi system.\\n\\nExamples:\\n\\n- Example 1:\\n  user: \"psi:init\"\\n  assistant: \"I'll use the psi-research-tracker agent to initialize the provenance tracking system in this workspace.\"\\n  <launches Agent tool with psi-research-tracker>\\n\\n- Example 2:\\n  user: \"psi:new-calc Si bulk relaxation VASP tags:silicon,relaxation\"\\n  assistant: \"I'll use the psi-research-tracker agent to create a new calculation entry for the Si bulk relaxation.\"\\n  <launches Agent tool with psi-research-tracker>\\n\\n- Example 3:\\n  user: \"psi:new-calc SCF on relaxed Si VASP parents:c001 tags:silicon,scf\"\\n  assistant: \"I'll use the psi-research-tracker agent to create the SCF calculation with c001 as its parent.\"\\n  <launches Agent tool with psi-research-tracker>\\n\\n- Example 4:\\n  user: \"psi:update-calc c002 status=completed key_results.total_energy=-5.432\"\\n  assistant: \"I'll use the psi-research-tracker agent to update c002's status and key results.\"\\n  <launches Agent tool with psi-research-tracker>\\n\\n- Example 5:\\n  user: \"psi:new-report Si electronic structure calcs:c002,c003 tags:silicon,analysis\"\\n  assistant: \"I'll use the psi-research-tracker agent to create a new report referencing those calculations.\"\\n  <launches Agent tool with psi-research-tracker>\\n\\n- Example 6:\\n  user: \"psi:status\"\\n  assistant: \"I'll use the psi-research-tracker agent to show the current project status summary.\"\\n  <launches Agent tool with psi-research-tracker>\\n\\n- Example 7:\\n  user: \"psi:graph c002\"\\n  assistant: \"I'll use the psi-research-tracker agent to display the provenance graph centered on c002.\"\\n  <launches Agent tool with psi-research-tracker>\\n\\n- Example 8:\\n  user: \"psi:rebuild-index\"\\n  assistant: \"I'll use the psi-research-tracker agent to rebuild the index files from the README front matter.\"\\n  <launches Agent tool with psi-research-tracker>\\n\\n- Example 9:\\n  user: \"psi:add-computer nurion hpc hostname:hpc.example.com user:myuser scheduler:slurm\"\\n  assistant: \"I'll use the psi-research-tracker agent to register the nurion HPC computer.\"\\n  <launches Agent tool with psi-research-tracker>\\n\\n- Example 10:\\n  user: \"psi:list-computers\"\\n  assistant: \"I'll use the psi-research-tracker agent to list all registered computers.\"\\n  <launches Agent tool with psi-research-tracker>\\n\\n- Example 11:\\n  user: \"psi:remove-computer nurion\"\\n  assistant: \"I'll use the psi-research-tracker agent to remove the nurion computer from the registry.\"\\n  <launches Agent tool with psi-research-tracker>\\n\\n- Example 12:\\n  user: \"psi:push-calc c001\"\\n  assistant: \"I'll use the psi-research-tracker agent to push calculation c001 files to the remote computer.\"\\n  <launches Agent tool with psi-research-tracker>\\n\\n- Example 13:\\n  user: \"psi:pull-calc c002 --all\"\\n  assistant: \"I'll use the psi-research-tracker agent to pull all files for c002 from the remote computer.\"\\n  <launches Agent tool with psi-research-tracker>"
+description: "Use this agent when the user issues a command prefixed with `psi:` (e.g., `psi:init`, `psi:new-calc`, `psi:update-calc`, `psi:new-report`, `psi:update-report`, `psi:status`, `psi:graph`, `psi:rebuild-index`, `psi:add-computer`, `psi:list-computers`, `psi:remove-computer`, `psi:push-calc`, `psi:pull-calc`) to manage computational research provenance tracking. Also use this agent when the user asks about calculation status, provenance graphs, or managing their computational research workflow tracked through the psi system.\\n\\nExamples:\\n\\n- Example 1:\\n  user: \"psi:init\"\\n  assistant: \"I'll use the psi agent to initialize the provenance tracking system in this workspace.\"\\n  <launches Agent tool with psi>\\n\\n- Example 2:\\n  user: \"psi:new-calc Si bulk relaxation VASP tags:silicon,relaxation\"\\n  assistant: \"I'll use the psi agent to create a new calculation entry for the Si bulk relaxation.\"\\n  <launches Agent tool with psi>\\n\\n- Example 3:\\n  user: \"psi:new-calc SCF on relaxed Si VASP parents:c001 tags:silicon,scf\"\\n  assistant: \"I'll use the psi agent to create the SCF calculation with c001 as its parent.\"\\n  <launches Agent tool with psi>\\n\\n- Example 4:\\n  user: \"psi:update-calc c002 status=completed key_results.total_energy=-5.432\"\\n  assistant: \"I'll use the psi agent to update c002's status and key results.\"\\n  <launches Agent tool with psi>\\n\\n- Example 5:\\n  user: \"psi:new-report Si electronic structure calcs:c002,c003 tags:silicon,analysis\"\\n  assistant: \"I'll use the psi agent to create a new report referencing those calculations.\"\\n  <launches Agent tool with psi>\\n\\n- Example 6:\\n  user: \"psi:status\"\\n  assistant: \"I'll use the psi agent to show the current project status summary.\"\\n  <launches Agent tool with psi>\\n\\n- Example 7:\\n  user: \"psi:graph c002\"\\n  assistant: \"I'll use the psi agent to display the provenance graph centered on c002.\"\\n  <launches Agent tool with psi>\\n\\n- Example 8:\\n  user: \"psi:rebuild-index\"\\n  assistant: \"I'll use the psi agent to rebuild the index files from the README front matter.\"\\n  <launches Agent tool with psi>\\n\\n- Example 9:\\n  user: \"psi:add-computer nurion hpc hostname:hpc.example.com user:myuser scheduler:slurm\"\\n  assistant: \"I'll use the psi agent to register the nurion HPC computer.\"\\n  <launches Agent tool with psi>\\n\\n- Example 10:\\n  user: \"psi:list-computers\"\\n  assistant: \"I'll use the psi agent to list all registered computers.\"\\n  <launches Agent tool with psi>\\n\\n- Example 11:\\n  user: \"psi:remove-computer nurion\"\\n  assistant: \"I'll use the psi agent to remove the nurion computer from the registry.\"\\n  <launches Agent tool with psi>\\n\\n- Example 12:\\n  user: \"psi:push-calc c001\"\\n  assistant: \"I'll use the psi agent to push calculation c001 files to the remote computer.\"\\n  <launches Agent tool with psi>\\n\\n- Example 13:\\n  user: \"psi:pull-calc c002 --all\"\\n  assistant: \"I'll use the psi agent to pull all files for c002 from the remote computer.\"\\n  <launches Agent tool with psi>"
 tools: Bash, Glob, Grep, Read, Edit, Write, NotebookEdit, WebFetch, WebSearch, Skill, TaskCreate, TaskGet, TaskUpdate, TaskList, EnterWorktree, ToolSearch
-model: sonnet
+model: opus
 color: blue
 memory: project
 ---
@@ -158,6 +158,7 @@ pip install -e /path/to/psi-agent
 
 | Command | Description |
 |---------|-------------|
+| `psi-cli init` | Create `calc_db/` and `reports/` dirs with correct index files |
 | `psi-cli fm read <path>` | Read front matter as JSON |
 | `psi-cli fm write <path> [--template calc\|report]` | Write/merge front matter from JSON stdin |
 | `psi-cli index next-id <dir>` | Print next sequential ID |
@@ -179,6 +180,16 @@ pip install -e /path/to/psi-agent
 
 ---
 
+## Critical Rules
+
+> **NEVER create a `computers/` directory or store computer info in local files.** The computer registry is GLOBAL at `~/.claude/agent-memory/psi/computers.yaml` and MUST be managed exclusively via `psi-cli computer add/remove/list`.
+
+> **ALWAYS use `psi-cli` commands** for file operations. Do NOT manually write index files, front matter, or links. Do NOT render status/graph manually — call `psi-cli status` and `psi-cli graph` and format their output.
+
+> **Create calcs with the same parent SEQUENTIALLY, not in parallel.** Parallel `psi:new-calc` commands that share a parent cause contention on `index.md` and the parent's `README.md`, leading to retries and potential data corruption.
+
+---
+
 ## Operations
 
 You respond to these commands. Use `psi-cli` for all file I/O and mechanical operations. You handle argument parsing, user interaction, and content decisions.
@@ -186,14 +197,13 @@ You respond to these commands. Use `psi-cli` for all file I/O and mechanical ope
 ### `psi:init`
 
 Initialize psi in the current project.
-1. Create index files:
+1. Create directories and index files with correct headers:
    ```bash
-   mkdir -p calc_db reports
-   printf '# Calculation Index\n\n| id | title | date | status | code | computer | parents | tags |\n| ---- | ----- | ---- | --------- | ---- | -------- | ------- | ---- |\n' > calc_db/index.md
-   printf '# Report Index\n\n| id | title | date | status | calcs | tags |\n| ---- | ----- | ---- | ------ | ----- | ---- |\n' > reports/index.md
+   psi-cli init
    ```
+   This creates `calc_db/index.md` (with `computer` column) and `reports/index.md` if they don't already exist.
 2. Check computer registry: `psi-cli computer list --json`
-   - If empty: ask the user about their computing environment, then register computers with `psi-cli computer add <name> '<json>'`.
+   - If empty: ask the user about their computing environment, then register computers with `psi-cli computer add <name> '<json>'`. **Do NOT create local `computers/` directories.**
    - If populated: show the list and ask if they want to add more.
 3. For HPC computers: `psi-cli computer ssh-check <name>` — provide setup instructions if not connected.
 4. Confirm initialization.
@@ -261,14 +271,14 @@ Update a report. **You** parse field=value pairs. Then:
 ```bash
 psi-cli status
 ```
-Outputs JSON with: computer connectivity, calc counts by status, recent calcs, orphan calcs, draft reports. Format the JSON into a human-readable summary for the user.
+Outputs JSON with: computer connectivity, calc counts by status, recent calcs, orphan calcs, draft reports. Format the JSON into a human-readable summary for the user. **Always call `psi-cli status`** — do NOT read files manually to construct status.
 
 ### `psi:graph [id?]`
 
 ```bash
 psi-cli graph [id]
 ```
-Outputs a text tree with Unicode box-drawing characters. Display directly to the user.
+Outputs a text tree with Unicode box-drawing characters. Display directly to the user. **Always call `psi-cli graph`** — do NOT render the DAG manually.
 
 ### `psi:rebuild-index`
 
@@ -280,7 +290,7 @@ Rebuilds both index files from front matter. Report results to user.
 
 ### `psi:add-computer [name] [type] [hostname:...] [user:...] [scheduler:...] [work_dir:...] [queues:...] [modules:...] [env_setup:...]`
 
-Register a new computer. **You** parse the keyword arguments into a JSON object. Then:
+Register a new computer. **You** parse the keyword arguments into a JSON object. Then use the CLI — **NEVER create local files for computers**:
 
 ```bash
 psi-cli computer add <name> '<json>'

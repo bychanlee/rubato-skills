@@ -6,6 +6,7 @@ import json
 import re
 from pathlib import Path
 
+from psi_cli.filelock import locked_write
 from psi_cli.frontmatter import read_frontmatter
 from psi_cli.main import die
 from psi_cli.markdown_table import read_index, render_table, write_index
@@ -85,32 +86,33 @@ def _next_id(dir_path: str) -> None:
 
 
 def _append(index_path: str, json_data: str) -> None:
-    """Append a row to the index."""
+    """Append a row to the index (with file locking for concurrency safety)."""
     try:
         data = json.loads(json_data)
     except json.JSONDecodeError as e:
         die(f"Invalid JSON: {e}")
 
     p = Path(index_path)
-    preamble, headers, rows = read_index(p)
+    with locked_write(p):
+        preamble, headers, rows = read_index(p)
 
-    if not headers:
-        # Detect headers from path
-        if "calc" in p.name or "calc" in str(p.parent):
-            headers = CALC_HEADERS
-            preamble = preamble or CALC_PREAMBLE
-        else:
-            headers = REPORT_HEADERS
-            preamble = preamble or REPORT_PREAMBLE
+        if not headers:
+            # Detect headers from path
+            if "calc" in p.name or "calc" in str(p.parent):
+                headers = CALC_HEADERS
+                preamble = preamble or CALC_PREAMBLE
+            else:
+                headers = REPORT_HEADERS
+                preamble = preamble or REPORT_PREAMBLE
 
-    row = [_fmt_cell(data.get(h, "-"), h) for h in headers]
-    rows.append(row)
-    write_index(p, preamble, headers, rows)
+        row = [_fmt_cell(data.get(h, "-"), h) for h in headers]
+        rows.append(row)
+        write_index(p, preamble, headers, rows)
     print(f"Appended to {p}")
 
 
 def _update(index_path: str, row_id: str, json_data: str) -> None:
-    """Update a row by its id."""
+    """Update a row by its id (with file locking for concurrency safety)."""
     try:
         data = json.loads(json_data)
     except json.JSONDecodeError as e:
@@ -120,24 +122,25 @@ def _update(index_path: str, row_id: str, json_data: str) -> None:
     if not p.exists():
         die(f"Index not found: {index_path}")
 
-    preamble, headers, rows = read_index(p)
-    if not headers:
-        die(f"No table found in {index_path}")
+    with locked_write(p):
+        preamble, headers, rows = read_index(p)
+        if not headers:
+            die(f"No table found in {index_path}")
 
-    id_col = 0  # id is always first column
-    found = False
-    for i, row in enumerate(rows):
-        if row[id_col].strip() == row_id:
-            for h_idx, h in enumerate(headers):
-                if h in data:
-                    rows[i][h_idx] = _fmt_cell(data[h], h)
-            found = True
-            break
+        id_col = 0  # id is always first column
+        found = False
+        for i, row in enumerate(rows):
+            if row[id_col].strip() == row_id:
+                for h_idx, h in enumerate(headers):
+                    if h in data:
+                        rows[i][h_idx] = _fmt_cell(data[h], h)
+                found = True
+                break
 
-    if not found:
-        die(f"ID {row_id} not found in {index_path}")
+        if not found:
+            die(f"ID {row_id} not found in {index_path}")
 
-    write_index(p, preamble, headers, rows)
+        write_index(p, preamble, headers, rows)
     print(f"Updated {row_id} in {p}")
 
 
