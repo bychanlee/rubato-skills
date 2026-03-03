@@ -2,15 +2,17 @@
 
 Claude Code skills for computational research provenance tracking. Manages calculations and reports using a lightweight, file-based system inspired by AiiDA's provenance graph — no database, no daemon, just markdown and YAML.
 
-## Installation
-
-Copy the `skills/` directory into your project or Claude Code skills path:
+## Quick Install
 
 ```bash
-cp -r skills/psi-* /path/to/your/project/.claude/skills/
+./install.sh
 ```
 
-Requires Python >= 3.10 and PyYAML (`pip install pyyaml`).
+This will:
+- Verify Python >= 3.10 is installed
+- Install PyYAML dependency if needed
+- Copy all 13 skills to `.claude/skills/`
+
 
 ## Usage
 
