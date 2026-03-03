@@ -260,11 +260,27 @@ def _ssh_check(hostname: str) -> bool:
         return False
 
 
+# --- Directory helpers ---
+
+def _resolve_dir(base: Path, entry_id: str) -> Path:
+    exact = base / entry_id
+    if exact.is_dir():
+        return exact
+    matches = sorted(p for p in base.glob(f"{entry_id}_*") if p.is_dir())
+    if len(matches) == 1:
+        return matches[0]
+    if len(matches) > 1:
+        print(f"Error: Multiple dirs match {entry_id}: {[p.name for p in matches]}", file=sys.stderr)
+        sys.exit(1)
+    print(f"Error: Directory not found for {entry_id} in {base}", file=sys.stderr)
+    sys.exit(1)
+
+
 # --- Sync helpers ---
 
 def _get_calc_info(calc_id: str) -> tuple[dict, str, Path]:
     """Read calc metadata and body. Returns (metadata, body, readme_path)."""
-    local_dir = Path("calc_db") / calc_id
+    local_dir = _resolve_dir(Path("calc_db"), calc_id)
     readme = local_dir / "README.md"
     if not readme.exists():
         print(f"Error: Calc not found: {readme}", file=sys.stderr)
@@ -367,7 +383,7 @@ def cmd_preflight(calc_id: str) -> None:
     hpc_path = _ensure_hpc_path(metadata, body, readme, config, calc_id)
 
     # List local input/code files
-    local_dir = Path("calc_db") / calc_id
+    local_dir = readme.parent
     input_files = []
     input_dir = local_dir / "input"
     if input_dir.exists():
@@ -410,7 +426,7 @@ def cmd_push(calc_id: str) -> None:
         sys.exit(2)
 
     hpc_path = _ensure_hpc_path(metadata, body, readme, config, calc_id)
-    local_dir = Path("calc_db") / calc_id
+    local_dir = readme.parent
     remote_base = f"{hostname}:{hpc_path}"
 
     # Create remote directory
@@ -594,7 +610,7 @@ def cmd_pull(calc_id: str, pull_all: bool = False) -> None:
         sys.exit(2)
 
     hpc_path = _ensure_hpc_path(metadata, body, readme, config, calc_id)
-    local_dir = Path("calc_db") / calc_id
+    local_dir = readme.parent
     remote_base = f"{hostname}:{hpc_path}"
     scheduler = config.get("scheduler", "slurm")
 

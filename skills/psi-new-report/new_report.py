@@ -278,6 +278,31 @@ def _fmt_cell(value, header: str) -> str:
     return str(value)
 
 
+# --- Directory helpers ---
+
+def _slugify(tags: list[str]) -> str:
+    if not tags:
+        return ""
+    slug = "_".join(tags)
+    slug = re.sub(r'[^\w]', '_', slug)
+    slug = re.sub(r'_+', '_', slug)
+    return slug.strip('_').lower()
+
+
+def _resolve_dir(base: Path, entry_id: str) -> Path:
+    exact = base / entry_id
+    if exact.is_dir():
+        return exact
+    matches = sorted(p for p in base.glob(f"{entry_id}_*") if p.is_dir())
+    if len(matches) == 1:
+        return matches[0]
+    if len(matches) > 1:
+        print(f"Error: Multiple dirs match {entry_id}: {[p.name for p in matches]}", file=sys.stderr)
+        sys.exit(1)
+    print(f"Error: Directory not found for {entry_id} in {base}", file=sys.stderr)
+    sys.exit(1)
+
+
 # --- Next ID ---
 
 def _next_id(dir_path: Path) -> str:
@@ -303,7 +328,8 @@ def _next_id(dir_path: Path) -> str:
 # --- Link operations ---
 
 def _add_report_link(calc_id: str, report_id: str) -> None:
-    calc_path = Path("calc_db") / calc_id / "README.md"
+    calc_dir = _resolve_dir(Path("calc_db"), calc_id)
+    calc_path = calc_dir / "README.md"
     if not calc_path.exists():
         print(f"Warning: Calc not found: {calc_path}", file=sys.stderr)
         return
@@ -357,7 +383,9 @@ def main() -> None:
     body = REPORT_BODY.format(id=next_id, title=metadata["title"])
 
     # Create report directory and README
-    report_path = reports_dir / next_id
+    slug = _slugify(metadata.get("tags", []))
+    dir_name = f"{next_id}_{slug}" if slug else next_id
+    report_path = reports_dir / dir_name
     report_path.mkdir(parents=True, exist_ok=True)
     readme = report_path / "README.md"
     write_frontmatter(readme, metadata, body)

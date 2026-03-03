@@ -37,18 +37,18 @@ Invoke skills with `/` prefix in Claude Code:
 ## How It Works
 
 psi tracks two entities:
-- **Calculations** (`calc_db/c{NNN}/`) — individual computational jobs (DFT, post-processing, scripts)
-- **Reports** (`reports/r{NNN}/`) — analysis documents referencing one or more calculations
+- **Calculations** (`calc_db/c{NNN}_tag1_tag2/`) — individual computational jobs (DFT, post-processing, scripts)
+- **Reports** (`reports/r{NNN}_tag1_tag2/`) — analysis documents referencing one or more calculations
 
 Relationships form a DAG:
 
 ```
-c001 (relax) → c002 (scf) → c003 (bands)
-                  └→ c004 (dos)
-       r001 references c002, c003
+c001_si_relax (relax) → c002_si_scf (scf) → c003_si_bands (bands)
+                          └→ c004_si_dos (dos)
+       r001_si_stability references c002, c003
 ```
 
-Each entry is a directory with a `README.md` containing YAML front matter and markdown body. Index files (`calc_db/index.md`, `reports/index.md`) provide tabular overviews. All data is git-friendly, human-readable, and diff-able.
+Each entry is a directory with a `README.md` containing YAML front matter and markdown body. Directory names include tags for readability (e.g., `c001_mos2_relax/`) while the `id` in frontmatter stays bare (`c001`). Index files (`calc_db/index.md`, `reports/index.md`) provide tabular overviews. All data is git-friendly, human-readable, and diff-able.
 
 ## Architecture
 

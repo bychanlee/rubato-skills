@@ -266,10 +266,26 @@ def _fmt_cell(value, header: str) -> str:
     return str(value)
 
 
+# --- Directory helpers ---
+
+def _resolve_dir(base: Path, entry_id: str) -> Path:
+    exact = base / entry_id
+    if exact.is_dir():
+        return exact
+    matches = sorted(p for p in base.glob(f"{entry_id}_*") if p.is_dir())
+    if len(matches) == 1:
+        return matches[0]
+    if len(matches) > 1:
+        print(f"Error: Multiple dirs match {entry_id}: {[p.name for p in matches]}", file=sys.stderr)
+        sys.exit(1)
+    print(f"Error: Directory not found for {entry_id} in {base}", file=sys.stderr)
+    sys.exit(1)
+
+
 # --- Link operations ---
 
 def _add_child(parent_id: str, child_id: str) -> None:
-    parent_path = Path("calc_db") / parent_id / "README.md"
+    parent_path = _resolve_dir(Path("calc_db"), parent_id) / "README.md"
     if not parent_path.exists():
         print(f"Warning: Parent not found: {parent_path}", file=sys.stderr)
         return
@@ -285,7 +301,7 @@ def _add_child(parent_id: str, child_id: str) -> None:
 
 
 def _remove_child(parent_id: str, child_id: str) -> None:
-    parent_path = Path("calc_db") / parent_id / "README.md"
+    parent_path = _resolve_dir(Path("calc_db"), parent_id) / "README.md"
     if not parent_path.exists():
         return
     with locked_write(parent_path):
@@ -313,7 +329,7 @@ def main() -> None:
         print(f"Error: Invalid JSON: {e}", file=sys.stderr)
         sys.exit(1)
 
-    readme = Path("calc_db") / args.calc_id / "README.md"
+    readme = _resolve_dir(Path("calc_db"), args.calc_id) / "README.md"
     if not readme.exists():
         print(f"Error: Calc not found: {readme}", file=sys.stderr)
         sys.exit(1)
