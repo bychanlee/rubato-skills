@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import json
 import re
-import subprocess
 import sys
 from collections import Counter
 from pathlib import Path
@@ -32,54 +31,10 @@ def read_frontmatter(path: Path) -> tuple[dict, str]:
     return parse_frontmatter(text)
 
 
-# --- Inline: computer registry (read only) ---
-
-REGISTRY_PATH = Path.home() / ".claude" / "agent-memory" / "psi" / "computers.yaml"
-
-
-def _read_registry() -> dict:
-    if not REGISTRY_PATH.exists():
-        return {"computers": {}}
-    text = REGISTRY_PATH.read_text(encoding="utf-8")
-    data = yaml.safe_load(text) or {}
-    if "computers" not in data:
-        data["computers"] = {}
-    # Handle list format: convert [{id: name, ...}, ...] to {name: {...}, ...}
-    if isinstance(data["computers"], list):
-        by_name = {}
-        for entry in data["computers"]:
-            name = entry.get("id") or entry.get("label") or entry.get("name", "unknown")
-            by_name[name] = {k: v for k, v in entry.items() if k not in ("id", "label")}
-        data["computers"] = by_name
-    return data
-
-
-def _ssh_check(hostname: str) -> bool:
-    try:
-        result = subprocess.run(
-            ["ssh", "-O", "check", hostname],
-            capture_output=True, text=True, timeout=10,
-        )
-        return result.returncode == 0
-    except (subprocess.TimeoutExpired, FileNotFoundError):
-        return False
-
-
 # --- Main ---
 
 def main() -> None:
     result = {}
-
-    # Computers
-    registry = _read_registry()
-    computers = registry.get("computers", {})
-    comp_status = {}
-    for name, config in computers.items():
-        entry = {"type": config.get("type", "unknown")}
-        if config.get("type") == "hpc" and config.get("hostname"):
-            entry["ssh"] = "connected" if _ssh_check(config["hostname"]) else "disconnected"
-        comp_status[name] = entry
-    result["computers"] = comp_status
 
     # Calculations
     calc_dir = Path("calc_db")
