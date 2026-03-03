@@ -28,6 +28,7 @@ Invoke skills with `/` prefix in Claude Code:
 | `/psi-rebuild-index` | Rebuild index files from front matter |
 | `/psi-add-computer <name> <type> [hostname:...] [...]` | Register an HPC/local computer |
 | `/psi-list-computers` | List registered computers |
+| `/psi-update-computer <name> [field=value ...]` | Update a computer's configuration |
 | `/psi-remove-computer <name>` | Remove a computer |
 
 ## How It Works
@@ -53,6 +54,11 @@ Each skill is a self-contained pair:
 - **Python script** — handles deterministic file operations (frontmatter, index tables, file locking, rsync)
 
 Scripts inline all needed utilities — no shared modules or packages. The computer registry is stored globally at `~/.claude/agent-memory/psi/computers.yaml`.
+
+## Authors
+
+- **Young Woo Choi** (ywchoi02@sogang.ac.kr, https://yw-choi.github.io)
+- **Byeongchan Lee** (bychan.lee@sogang.ac.kr)
 
 ## License
 

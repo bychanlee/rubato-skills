@@ -16,6 +16,7 @@ skills/
 ├── psi-add-computer/   # Register a computer
 ├── psi-list-computers/ # List registered computers
 ├── psi-remove-computer/# Remove a computer
+├── psi-update-computer/# Update a computer's configuration
 └── psi-rebuild-index/  # Rebuild index from front matter
 ```
 
@@ -35,3 +36,4 @@ Each directory contains:
 - **Every behavioral fix must become a rule in the relevant SKILL.md.** Not just a memory note.
 - **Keep rules minimal and precise.** Each rule addresses one specific failure mode.
 - **Do not create shared utility modules.** Each script must be self-contained.
+- **After adding or modifying skills, update PSI.md and README.md** to reflect the changes.
