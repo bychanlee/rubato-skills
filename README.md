@@ -11,7 +11,23 @@ Claude Code skills for computational research provenance tracking. Manages calcu
 This will:
 - Verify Python >= 3.10 is installed
 - Install PyYAML dependency if needed
-- Copy all 13 skills to `.claude/skills/`
+- Copy all 14 skills to `.claude/skills/`
+
+### Materials Project API Key (for `/psi-fetch-struct`)
+
+`/psi-fetch-struct` requires a [Materials Project](https://materialsproject.org/) API key and the `mp-api`/`pymatgen` packages:
+
+```bash
+pip install pymatgen mp-api
+```
+
+Set your API key via pymatgen config:
+
+```bash
+pmg config --add PMG_MAPI_KEY your_key
+```
+
+Get a free key at https://materialsproject.org/api.
 
 
 ## Usage
@@ -33,6 +49,7 @@ Invoke skills with `/` prefix in Claude Code:
 | `/psi-list-computers` | List registered computers |
 | `/psi-update-computer <name> [field=value ...]` | Update a computer's configuration |
 | `/psi-remove-computer <name>` | Remove a computer |
+| `/psi-fetch-struct <query> [output_dir:path]` | Fetch structure from Materials Project |
 
 ## How It Works
 
@@ -63,7 +80,7 @@ Scripts inline all needed utilities — no shared modules or packages. The compu
 ## Authors
 
 - **Young Woo Choi** (ywchoi02@sogang.ac.kr, https://yw-choi.github.io)
-- **Byeongchan Lee** (bychan.lee@sogang.ac.kr)
+- **Byeongchan Lee** (bychan.lee@sogang.ac.kr, https://brycebyeongchan.github.io/)
 
 ## License
 

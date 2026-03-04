@@ -18,12 +18,13 @@ skills/
 ├── psi-remove-computer/# Remove a computer
 ├── psi-update-computer/# Update a computer's configuration
 ├── psi-run-calc/       # Run a calculation on remote HPC
-└── psi-rebuild-index/  # Rebuild index from front matter
+├── psi-rebuild-index/  # Rebuild index from front matter
+└── psi-fetch-struct/   # Fetch structure from Materials Project
 ```
 
 Each directory contains:
 - `SKILL.md` — Skill prompt (usage, rules, execution instructions)
-- `*.py` — Self-contained Python script (only depends on PyYAML)
+- `*.py` — Self-contained Python script (depends on PyYAML; `psi-fetch-struct` additionally requires `pymatgen` and `mp-api`)
 
 ## Design Principles
 
