@@ -20,6 +20,8 @@ python {skill_dir}/init.py
 
 This creates `calc_db/` and `reports/` directories with correctly-formatted `index.md` files.
 
+The computer registry lives at `calc_db/computers.yaml` (created on first `psi-add-computer`).
+
 After running, check the computer registry:
 
 ```bash

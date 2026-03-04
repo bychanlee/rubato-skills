@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Remove a computer from the global registry."""
+"""Remove a computer from the project-local registry."""
 
 from __future__ import annotations
 
@@ -12,7 +12,7 @@ import yaml
 
 # --- Inline: computer registry ---
 
-REGISTRY_PATH = Path.home() / ".claude" / "agent-memory" / "psi" / "computers.yaml"
+REGISTRY_PATH = Path("calc_db") / "computers.yaml"
 
 
 def _read_registry() -> dict:

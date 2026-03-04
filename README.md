@@ -75,7 +75,7 @@ Each skill is a self-contained pair:
 - **SKILL.md** — prompt that handles argument parsing, user interaction, and behavioral rules
 - **Python script** — handles deterministic file operations (frontmatter, index tables, file locking, rsync)
 
-Scripts inline all needed utilities — no shared modules or packages. The computer registry is stored globally at `~/.claude/agent-memory/psi/computers.yaml`.
+Scripts inline all needed utilities — no shared modules or packages. The computer registry is stored per-project at `calc_db/computers.yaml`.
 
 ## Authors
 

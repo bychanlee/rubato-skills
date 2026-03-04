@@ -29,7 +29,7 @@ Skills are in `skills/psi-*/`. Each has a SKILL.md prompt and a self-contained P
 
 - Run `/psi-init` before any other psi skill.
 - Create calcs with the same parent **sequentially**, not in parallel.
-- Computer registry is global (`~/.claude/agent-memory/psi/computers.yaml`), not per-project.
+- Computer registry is project-local at `calc_db/computers.yaml`.
 - Do not manually edit `index.md` files — use the skills.
 - **Do NOT access other project directories.** Stay within the current project.
 - Directory names include tags: `c001_mos2_bulk_relax/`, `r001_mos2_stability/`. The `id` in frontmatter stays bare (`c001`). Always reference calcs/reports by their `id`, not the directory name.

@@ -230,7 +230,7 @@ def _fmt_cell(value: Any, header: str) -> str:
 
 # --- Inline: computer registry ---
 
-REGISTRY_PATH = Path.home() / ".claude" / "agent-memory" / "psi" / "computers.yaml"
+REGISTRY_PATH = Path("calc_db") / "computers.yaml"
 
 
 def _read_registry() -> dict:

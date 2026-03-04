@@ -30,7 +30,7 @@ Each directory contains:
 
 - **Self-contained scripts**: Each Python script inlines all needed utilities (frontmatter, markdown_table, filelock). No shared imports.
 - **Deterministic file ops in Python, judgment in prompts**: Scripts handle file I/O, locking, and index management. SKILL.md prompts handle argument parsing and user interaction.
-- **Computer registry is global**: `~/.claude/agent-memory/psi/computers.yaml`, shared across projects.
+- **Computer registry is project-local**: `calc_db/computers.yaml`, created on first `psi-add-computer`.
 
 ## Development Rules
 

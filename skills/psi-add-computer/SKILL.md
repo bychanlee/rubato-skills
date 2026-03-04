@@ -1,7 +1,7 @@
 ---
 name: psi-add-computer
 user-invokable: true
-description: Register a new computer in the global registry
+description: Register a new computer in the project registry
 argument-hint: "<name> <type> [hostname:...] [user:...] [scheduler:...] [work_dir:...]"
 ---
 
@@ -50,7 +50,7 @@ When registering an HPC computer, gather job submission details **before** final
 
 ## Rules
 
-- **NEVER create a local `computers/` directory.** The registry is global at `~/.claude/agent-memory/psi/computers.yaml`.
+- **The computer registry is project-local at `calc_db/computers.yaml`.** Run `/psi-init` before adding computers.
 - **NEVER hardcode or guess remote environment details.** All remote information must be discovered from official docs, the live system, or confirmed by the user.
 
 ## SSH ControlMaster Setup
