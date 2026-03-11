@@ -1,10 +1,22 @@
-# RUBATO
+# RUBATO: Research Utility Bot for Ab-initio TOolkits
 
-**RUBATO: Research Utility Bot for Ab-initio TOolkits**
-
-Every ab-initio researcher knows the feeling: you just finished a QE bands calculation and now you need to plot it — so you dig up a plotting script from a previous project, fix the hardcoded paths, remember what `lsym` does, and spend 30 minutes on something that should take 30 seconds. Or you want a QE input for a new material and spend time copy-pasting a template and manually looking up pseudopotentials.
+Every ab-initio researcher knows the feeling: you need a QE input for a new material, so you copy-paste a template, manually look up pseudopotentials, double-check which flags are valid for your version, and pray you didn't misspell `occupations`. The calculation crashes — now you're grepping through QE docs to figure out which flag conflicts with which. And after all that, you still need to plot the band structure, which means digging up a plotting script from a previous project, fixing hardcoded paths, and remembering what `lsym` does. Every step should take 30 seconds but somehow takes 30 minutes.
 
 RUBATO is a collection of [Claude Code](https://claude.ai/code) slash commands (skills) that eliminate that friction. Each command handles one specific task — fetching a structure, preparing an input file, plotting a band structure, generating a job script — and can be used independently, whenever you need it.
+
+---
+
+## Contributing
+
+New skills are welcome! If you have a workflow that you find yourself repeating — for any ab-initio code — consider turning it into a RUBATO skill.
+
+1. Fork this repository and create a branch (`git checkout -b feat/my-new-skill`)
+2. Add your skill directory under `skills/` following the existing structure (`SKILL.md` + self-contained Python script)
+3. Read `CLAUDE.md` for design principles and development rules
+4. Update `README.md` to include your new skill in the Skills Reference table
+5. Open a Pull Request with a description of what the skill does and an example usage
+
+Please keep each script self-contained (no shared imports) and each `SKILL.md` clear and minimal.
 
 ---
 
@@ -20,8 +32,8 @@ RUBATO is a collection of [Claude Code](https://claude.ai/code) slash commands (
 ## Setup
 
 ```bash
-git clone https://github.com/bychanlee/rubato-skills.git ~/tools/rubato
-cd ~/tools/rubato && ./install.sh
+git clone https://github.com/bychanlee/rubato-skills.git
+cd rubato-skills && ./install.sh
 ```
 
 The installer handles everything: checks Python 3.10+, installs required packages (`pyyaml`, `numpy`, `matplotlib`), and symlinks all skills into `~/.claude/skills/`. After install, `/rubato:*` commands are available in **every** Claude Code project.
@@ -33,20 +45,36 @@ pip install pymatgen mp-api
 export MP_API_KEY="your-key-here"   # https://materialsproject.org/api
 ```
 
-To update: `cd ~/tools/rubato && git pull` (symlinks update in place).
-To uninstall: `cd ~/tools/rubato && ./install.sh --uninstall`
+To update: `git pull` in the cloned directory (symlinks update in place).
+To uninstall: `./install.sh --uninstall`
 
 ---
 
 ## How It Works
 
-Each command is **independent** — use whichever you need, whenever you need it. No setup, no state to maintain.
+Each command is **independent** — use whichever you need, whenever you need it. Just describe what you want in natural language.
+
+### Quantum ESPRESSO workflow
 
 ```
-/rubato:fetch-struct "2H bulk MoS2"        <- grab CIF from Materials Project
-/rubato:qe-input-generator MoS2.cif scf   <- generate SCF input with physics-aware defaults
-  ... run your QE calculation ...
-/rubato:qe-plotbands MoS2.bands.xml        <- plot band structure from XML, done
+/rubato:fetch-struct        "Materials Project에서 2H bulk MoS2 구조 가져와줘"
+/rubato:qe-input-generator  "MoS2.cif로 SCF 인풋 만들어줘"
+/rubato:qe-input-generator  "bands 계산용 인풋도 만들어줘"
+/rubato:qe-input-validator  "scf.in 한번 검증해줘"
+                             ... run your QE calculation ...
+/rubato:qe-plotbands        "밴드 구조 플롯해줘"
+```
+
+### BerkeleyGW workflow
+
+```
+/rubato:bgw-epsilon          "epsilon.inp 만들어줘, cutoff 15 Ry, 밴드 200개"
+/rubato:bgw-sigma            "sigma.inp도 만들어줘, screened coulomb cutoff 10 Ry"
+/rubato:bgw-epsilon          "epsilon.inp 검증해줘"
+                              ... run your BGW calculation ...
+/rubato:bgw-gw-conv-sigma    "screened_coulomb_cutoff 5, 10, 15, 20으로 수렴 테스트 세팅해줘"
+/rubato:bgw-gw-conv-analyze  "수렴 결과 분석해줘"
+/rubato:bgw-plotbands-gw-dft "DFT랑 GW 밴드 비교 플롯해줘"
 ```
 
 ---
@@ -85,20 +113,16 @@ Each command is **independent** — use whichever you need, whenever you need it
 
 ---
 
-## Input Validation
+## Input Validation (BerkeleyGW)
 
-### How it works
-
-The BerkeleyGW input skills (`epsilon`, `sigma`, `kernel`, `absorption`) have a built-in **input validator** that catches keyword errors before you submit a calculation.
-
-Each skill has two modes:
+The BerkeleyGW input skills (`epsilon`, `sigma`, `kernel`, `absorption`) have a built-in **input validator** that catches keyword errors before you submit a calculation. Each skill has two modes:
 
 ```
 /rubato:bgw-epsilon epsilon_cutoff:15 number_bands:200 ...   # generate mode
 /rubato:bgw-epsilon validate:epsilon.inp                      # validate mode
 ```
 
-In **generate mode**, the validator runs automatically on the generated file before showing it to you. In **validate mode**, you can check any existing input file on demand.
+In **generate mode**, the validator runs automatically on the generated file. In **validate mode**, you can check any existing input file on demand.
 
 ### Reference keyword database
 
