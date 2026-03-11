@@ -24,21 +24,17 @@ git clone https://github.com/BryceByeongchan/rubato-skills.git ~/tools/rubato
 cd ~/tools/rubato && ./install.sh
 ```
 
-This symlinks all skill directories into `~/.claude/skills/`, making `/rubato:*` commands available in **every** Claude Code project — no per-project setup needed.
+The installer handles everything: checks Python 3.10+, installs required packages (`pyyaml`, `numpy`, `matplotlib`), and symlinks all skills into `~/.claude/skills/`. After install, `/rubato:*` commands are available in **every** Claude Code project.
 
-To update:
-
-```bash
-cd ~/tools/rubato && git pull
-```
-
-Since skills are symlinked (not copied), `git pull` updates everything in place.
-
-To uninstall:
+For `/rubato:fetch-struct` and `/rubato:qe-input-generator` (Materials Project integration), also run:
 
 ```bash
-cd ~/tools/rubato && ./install.sh --uninstall
+pip install pymatgen mp-api
+export MP_API_KEY="your-key-here"   # https://materialsproject.org/api
 ```
+
+To update: `cd ~/tools/rubato && git pull` (symlinks update in place).
+To uninstall: `cd ~/tools/rubato && ./install.sh --uninstall`
 
 ---
 
@@ -163,25 +159,10 @@ Keywords were extracted from:
 
 ---
 
-## Installation
-
-### Prerequisites
+## Prerequisites
 
 - [Claude Code](https://claude.ai/code) CLI installed and authenticated
-- Python 3.10+ with the following packages:
-
-```bash
-# Core (all skills)
-pip install numpy matplotlib pyyaml
-
-# fetch-struct, qe-input-generator
-pip install pymatgen mp-api
-```
-
-- Materials Project API key (for `/rubato:fetch-struct`):
-  ```bash
-  export MP_API_KEY="your-key-here"   # https://materialsproject.org/api
-  ```
+- Python 3.10+ and pip
 
 ## Authors
 

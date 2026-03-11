@@ -83,22 +83,44 @@ fi
 printf "${GREEN}✓ Python $PYTHON_VERSION${NC}\n"
 echo ""
 
-# Step 2: Check and install PyYAML
-printf "${YELLOW}[2/4] Checking PyYAML dependency...${NC}\n"
-if $PYTHON_CMD -c "import yaml" 2>/dev/null; then
-  printf "${GREEN}✓ PyYAML already installed${NC}\n"
+# Step 2: Install Python dependencies
+printf "${YELLOW}[2/4] Checking Python dependencies...${NC}\n"
+
+# Find pip command
+PIP_CMD=""
+if command -v pip3 &>/dev/null; then
+  PIP_CMD="pip3"
+elif command -v pip &>/dev/null; then
+  PIP_CMD="pip"
 else
-  printf "${YELLOW}Installing PyYAML...${NC}\n"
-  if command -v pip3 &>/dev/null; then
-    pip3 install pyyaml
-  elif command -v pip &>/dev/null; then
-    pip install pyyaml
-  else
-    printf "${RED}✗ pip not found. Please install PyYAML manually:${NC}\n"
-    echo "  pip install pyyaml"
-    exit 1
-  fi
-  printf "${GREEN}✓ PyYAML installed${NC}\n"
+  printf "${RED}✗ pip not found. Please install pip first.${NC}\n"
+  exit 1
+fi
+
+# Core packages required by all skills
+CORE_PKGS=()
+$PYTHON_CMD -c "import yaml" 2>/dev/null    || CORE_PKGS+=("pyyaml")
+$PYTHON_CMD -c "import numpy" 2>/dev/null   || CORE_PKGS+=("numpy")
+$PYTHON_CMD -c "import matplotlib" 2>/dev/null || CORE_PKGS+=("matplotlib")
+
+if [[ ${#CORE_PKGS[@]} -eq 0 ]]; then
+  printf "${GREEN}✓ All core packages already installed${NC}\n"
+else
+  printf "${YELLOW}Installing: ${CORE_PKGS[*]}${NC}\n"
+  $PIP_CMD install "${CORE_PKGS[@]}"
+  printf "${GREEN}✓ Core packages installed${NC}\n"
+fi
+
+# Optional packages (fetch-struct, qe-input-generator)
+OPTIONAL_MISSING=()
+$PYTHON_CMD -c "import pymatgen" 2>/dev/null || OPTIONAL_MISSING+=("pymatgen")
+$PYTHON_CMD -c "import mp_api" 2>/dev/null   || OPTIONAL_MISSING+=("mp-api")
+
+if [[ ${#OPTIONAL_MISSING[@]} -eq 0 ]]; then
+  printf "${GREEN}✓ Optional packages already installed (pymatgen, mp-api)${NC}\n"
+else
+  printf "${YELLOW}⚠ Optional: ${OPTIONAL_MISSING[*]} (needed for /rubato:fetch-struct, /rubato:qe-input-generator)${NC}\n"
+  printf "${YELLOW}  Install later with: $PIP_CMD install pymatgen mp-api${NC}\n"
 fi
 echo ""
 
@@ -152,9 +174,4 @@ printf "Skills are symlinked from:\n"
 printf "  ${BLUE}$SCRIPT_DIR/skills/${NC}\n"
 printf "To update, just run ${YELLOW}git pull${NC} in this repo.\n"
 printf "To uninstall, run ${YELLOW}./install.sh --uninstall${NC}\n"
-echo ""
-printf "${BLUE}Documentation:${NC}\n"
-echo ""
-echo "  README.md          - Overview and quick reference"
-echo "  skills/*/SKILL.md  - Individual skill documentation"
 echo ""
