@@ -25,7 +25,7 @@ while [[ $# -gt 0 ]]; do
       if [[ -L "$link" ]]; then
         rm "$link"
         printf "${GREEN}  ✓ Removed $(basename "$link")${NC}\n"
-        ((REMOVED++))
+        REMOVED=$((REMOVED + 1))
       fi
     done
     if [[ $REMOVED -eq 0 ]]; then
@@ -137,7 +137,7 @@ for SOURCE in "$SCRIPT_DIR"/skills/rubato-*; do
 
   ln -sfn "$SOURCE" "$LINK_PATH"
   printf "${GREEN}  ✓ $SKILL_NAME${NC}\n"
-  ((INSTALLED_COUNT++))
+  INSTALLED_COUNT=$((INSTALLED_COUNT + 1))
 done
 
 printf "${GREEN}✓ Installed $INSTALLED_COUNT skills${NC}\n"
