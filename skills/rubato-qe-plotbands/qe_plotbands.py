@@ -32,7 +32,7 @@ _LABEL_MAP = {
     'A': 'A', 'B': 'B', 'C': 'C', 'D': 'D',
     'H': 'H', 'K': 'K', 'L': 'L', 'M': 'M',
     'R': 'R', 'S': 'S', 'T': 'T', 'U': 'U',
-    'V': 'V', 'W': 'W', 'X': 'X', 'Y': 'Y', 'Z': 'Z',
+    'V': 'V', 'W': 'W', 'X': 'X', 'Y': 'Y', 'Z': '$\\mathit{Z}$',
 }
 
 
@@ -135,25 +135,29 @@ def plot_bands(xml_file, labels=None, erange=(-4, 4), out=None, title=None, spin
     fig, ax = plt.subplots()
 
     for ib in range(e.shape[1]):
-        ax.plot(kpath, e[:, ib], color='blue', lw=1.5)
+        ax.plot(kpath, e[:, ib], color='blue', lw=0.8)
 
     if labels is not None:
         tick_x = get_hsym_tick_x(kpath, len(labels))
-        for x in tick_x:
+        # Skip vlines at first/last k-point (borders already serve as boundary)
+        for x in tick_x[1:-1]:
             ax.axvline(x=x, color='grey', lw=0.5, ls='--')
         ax.set_xticks(tick_x)
-        ax.set_xticklabels(labels, fontsize=10)
+        ax.set_xticklabels(labels, fontsize=10, fontfamily='serif')
     else:
         ax.set_xticks([])
 
     ax.axhline(y=0, color='grey', ls=':')
     ax.set_xlim(kpath[0], kpath[-1])
+    # Hide top/right spines for cleaner look (avoids spine overlapping Z label)
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
     ax.set_ylim(erange[0], erange[1])
     ax.set_ylabel('Energy (eV)', fontsize=10)
     ax.tick_params(axis='y', labelsize=9)
 
     if title:
-        ax.set_title(title, fontsize=11, fontweight='bold')
+        ax.set_title(title, fontsize=11)
 
     plt.tight_layout()
 
